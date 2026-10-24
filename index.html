@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#120c1b">
+  <title>Halloween do Verdana — Votação de Fantasias</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #100b16;
+      --panel: #1b1223;
+      --panel2: #24162b;
+      --ink: #fff6e8;
+      --muted: #c6b4ca;
+      --orange: #ff7a1a;
+      --orange2: #ffb347;
+      --purple: #b778ff;
+      --green: #b9ef76;
+      --line: rgba(255,255,255,.12);
+      --shadow: 0 24px 80px rgba(0,0,0,.34);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background:
+        radial-gradient(ellipse at 12% 8%, rgba(119,48,150,.24), transparent 36rem),
+        radial-gradient(ellipse at 92% 28%, rgba(255,122,26,.12), transparent 33rem),
+        var(--bg);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+    .wrap { width: min(1120px, calc(100% - 40px)); margin: auto; }
+    header { display: flex; justify-content: space-between; align-items: center; padding: 24px 0; }
+    .brand { display:flex; align-items:center; gap:10px; font-weight:800; letter-spacing:.04em; }
+    .brand-mark { display:grid; place-items:center; width:38px; height:38px; background:var(--orange); border-radius:13px; font-size:21px; box-shadow:0 0 28px #ff7a1a55; }
+    .badge { border:1px solid #ff9b4b55; color:#ffd3a5; background:#ff7a1a12; padding:8px 12px; border-radius:999px; font-size:12px; font-weight:700; }
+    .hero { position:relative; overflow:hidden; margin:24px 0 28px; border:1px solid var(--line); border-radius:30px; padding: clamp(28px, 6vw, 64px); background:linear-gradient(125deg, #27152d 0%, #1b1223 55%, #26151d 100%); box-shadow:var(--shadow); }
+    .hero:after { content:""; position:absolute; width:330px; height:330px; border-radius:50%; right:-65px; top:-112px; background:radial-gradient(circle, #ff7a1a24, transparent 68%); pointer-events:none; }
+    .eyebrow { color:var(--orange2); font-weight:800; text-transform:uppercase; letter-spacing:.16em; font-size:12px; }
+    h1 { max-width:720px; margin:13px 0 12px; font-size:clamp(40px, 7vw, 76px); line-height:.98; letter-spacing:-.055em; }
+    h1 span { color:var(--orange); }
+    .intro { max-width:610px; color:var(--muted); line-height:1.65; margin:0; font-size:16px; }
+    .hero-bottom { display:flex; gap:20px; align-items:end; justify-content:space-between; flex-wrap:wrap; margin-top:34px; }
+    .event-time { display:flex; gap:12px; align-items:center; color:#e8d9e9; font-size:14px; }
+    .event-time strong { color:var(--ink); }
+    .countdown { display:flex; gap:10px; }
+    .time-box { min-width:76px; text-align:center; border:1px solid var(--line); background:#100b1680; border-radius:15px; padding:11px 12px 9px; }
+    .time-box b { display:block; font-size:26px; line-height:1.1; letter-spacing:-.04em; }
+    .time-box small { color:var(--muted); font-size:10px; text-transform:uppercase; letter-spacing:.12em; }
+    .status-line { margin-top:14px; color:var(--orange2); font-weight:700; font-size:13px; }
+    .section-head { display:flex; justify-content:space-between; align-items:end; gap:16px; flex-wrap:wrap; margin:34px 0 18px; }
+    h2 { font-size:27px; letter-spacing:-.035em; margin:0 0 5px; }
+    .sub { color:var(--muted); margin:0; font-size:14px; }
+    .grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(230px, 1fr)); gap:16px; }
+    .card { background:linear-gradient(155deg, var(--panel2), var(--panel)); border:1px solid var(--line); border-radius:21px; padding:19px; min-height:180px; display:flex; flex-direction:column; transition:transform .2s, border-color .2s; }
+    .card:hover { transform:translateY(-3px); border-color:#ff9b4b66; }
+    .card-top { display:flex; justify-content:space-between; align-items:flex-start; }
+    .avatar { display:grid; place-items:center; width:55px; height:55px; border-radius:17px; background:#ff7a1a18; font-size:30px; }
+    .votes { color:var(--muted); font-size:12px; }
+    .card h3 { margin:17px 0 4px; font-size:18px; }
+    .card p { margin:0 0 16px; color:var(--muted); font-size:13px; }
+    .vote-btn, .primary { color:#1a0e14; background:linear-gradient(135deg, #ffb347, #ff7a1a); border:0; border-radius:12px; padding:11px 14px; font-weight:800; box-shadow:0 7px 20px #ff7a1a22; transition:filter .2s, transform .2s; }
+    .vote-btn { margin-top:auto; }
+    .vote-btn:hover, .primary:hover { filter:brightness(1.08); transform:translateY(-1px); }
+    .vote-btn:disabled { cursor:not-allowed; filter:grayscale(.7); opacity:.6; transform:none; }
+    .empty { grid-column:1/-1; padding:34px 20px; text-align:center; background:#1b1223aa; border:1px dashed #ffffff2b; border-radius:20px; color:var(--muted); }
+    .form-panel { margin:22px 0 30px; padding:22px; border:1px solid var(--line); border-radius:20px; background:#1b1223; }
+    .form-panel h2 { margin-bottom:7px; }
+    .jotform-frame { min-height:500px; margin-top:18px; overflow:hidden; border-radius:14px; background:#fff; }
+    .jotform-frame iframe { display:block; width:100%; min-height:650px; border:0; }
+    .rating-panel[hidden], #voting-panel[hidden] { display:none; }
+    .table-frame { width:100%; height:600px; overflow:hidden; border:1px solid var(--line); border-radius:16px; background:#1b1223; }
+    .table-frame .jotform-table-embed { width:100%; height:600px; }
+    .photo-card { overflow:hidden; padding:0; }
+    .photo-card .photo { width:100%; height:230px; object-fit:cover; background:#100b16; }
+    .sample-art { display:grid; place-items:center; height:230px; font-size:86px; background:radial-gradient(circle at 50% 42%,#6a3c70,#25162e 62%,#100b16); }
+    .sample-art.vampire { background:radial-gradient(circle at 50% 42%,#79334c,#291420 62%,#100b16); }
+    .sample-art.witch { background:radial-gradient(circle at 50% 42%,#48542f,#1b241b 62%,#100b16); }
+    .sample-art.skeleton { background:radial-gradient(circle at 50% 42%,#706043,#292116 62%,#100b16); }
+    .sample-art.mummy { background:radial-gradient(circle at 50% 42%,#88744e,#332a1d 62%,#100b16); }
+    .sample-art.pumpkin { background:radial-gradient(circle at 50% 42%,#9b4c1f,#3b2018 62%,#100b16); }
+    .preview-note { display:inline-flex; align-items:center; gap:6px; padding:6px 10px; margin:0 0 15px; border-radius:999px; color:#ffd3a5; background:#ff7a1a15; border:1px solid #ff9b4b44; font-size:11px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; }
+    .photo-card .photo-info { padding:16px; display:flex; flex:1; flex-direction:column; }
+    .stars { display:flex; gap:4px; margin:8px 0 4px; }
+    .star { border:0; background:transparent; color:#756579; font-size:26px; line-height:1; padding:2px; }
+    .star.selected, .star:hover { color:#ffb347; }
+    .star:disabled { cursor:default; }
+    .score { color:var(--muted); font-size:12px; }
+    .podium { display:grid; grid-template-columns:repeat(5,1fr); gap:10px; align-items:end; margin:18px 0 24px; }
+    .podium-place { min-height:104px; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; padding:12px 8px; border:1px solid var(--line); border-radius:15px; background:linear-gradient(160deg,#35203b,#1b1223); }
+    .podium-place.first { min-height:142px; border-color:#ffb34788; background:linear-gradient(160deg,#68401d,#281722); }
+    .podium-place .medal { font-size:25px; }
+    .podium-place strong { max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; margin-top:5px; }
+    .podium-place small { color:var(--muted); margin-top:3px; }
+    .empty .emoji { font-size:34px; display:block; margin-bottom:10px; }
+    .admin { margin:28px 0 48px; padding:21px; border-radius:20px; background:#17101e; border:1px solid var(--line); }
+    .admin summary { cursor:pointer; font-weight:800; }
+    .form { display:grid; grid-template-columns:1.2fr 1fr auto; gap:10px; margin-top:18px; }
+    input { width:100%; color:var(--ink); background:#0f0b14; border:1px solid #ffffff24; border-radius:11px; padding:12px 13px; outline:none; }
+    input:focus { border-color:var(--purple); box-shadow:0 0 0 3px #b778ff20; }
+    .notice { margin:13px 0 0; color:#aa99b0; font-size:12px; line-height:1.55; }
+    footer { border-top:1px solid var(--line); padding:20px 0 28px; color:#a997b0; font-size:12px; text-align:center; }
+    .toast { position:fixed; bottom:24px; left:50%; transform:translate(-50%, 20px); opacity:0; pointer-events:none; background:#f8eddc; color:#1b1223; border-radius:12px; padding:12px 18px; box-shadow:var(--shadow); font-weight:700; transition:.25s; z-index:10; }
+    .toast.show { opacity:1; transform:translate(-50%, 0); }
+    .hauntings { position:fixed; inset:0; overflow:hidden; pointer-events:none; z-index:3; }
+    .ghost-flight { position:absolute; left:-100px; top:24%; font-size:clamp(42px, 6vw, 72px); filter:drop-shadow(0 0 18px #d5c8ff88); animation:ghostCruise 24s linear infinite; opacity:.9; }
+    .ghost-flight:after { content:""; position:absolute; width:7px; height:7px; border-radius:50%; background:#d6c6ff; left:-14px; top:55%; box-shadow:-20px 8px 0 -1px #b778ff99, -38px -4px 0 -2px #fff6e888; }
+    .pumpkin { position:absolute; bottom:18px; font-size:clamp(38px, 5vw, 62px); filter:drop-shadow(0 0 16px #ff7a1a55); animation:pumpkinBob 3.8s ease-in-out infinite; }
+    .pumpkin.left { left:clamp(12px, 4vw, 54px); }
+    .pumpkin.right { right:clamp(12px, 4vw, 54px); animation-delay:-1.9s; }
+    .bat { position:absolute; font-size:28px; opacity:.75; animation:batFlight 16s linear infinite; }
+    .bat.one { top:18%; left:-50px; }
+    .bat.two { top:61%; left:-50px; font-size:21px; animation-delay:-8s; animation-duration:20s; }
+    @keyframes ghostCruise {
+      0% { transform:translate(-5vw, 0) rotate(-7deg); }
+      20% { transform:translate(25vw, 36px) rotate(4deg); }
+      45% { transform:translate(55vw, -18px) rotate(-3deg); }
+      70% { transform:translate(85vw, 30px) rotate(5deg); }
+      100% { transform:translate(115vw, -8px) rotate(-5deg); }
+    }
+    @keyframes pumpkinBob { 0%,100% { transform:translateY(0) rotate(-4deg); } 50% { transform:translateY(-10px) rotate(4deg); } }
+    @keyframes batFlight {
+      0% { transform:translate(-5vw, 0) scale(.8) rotate(8deg); }
+      50% { transform:translate(55vw, -42px) scale(1) rotate(-5deg); }
+      100% { transform:translate(115vw, 18px) scale(.8) rotate(8deg); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration:.01ms !important; animation-iteration-count:1 !important; scroll-behavior:auto !important; }
+      .ghost-flight { left:auto; right:12%; top:16%; }
+      .bat { display:none; }
+    }
+    @media(max-width:640px) {
+      .wrap { width:min(100% - 28px, 1120px); }
+      header { padding:17px 0; }
+      .badge { font-size:10px; }
+      .hero { margin-top:14px; border-radius:23px; }
+      .hero-bottom { align-items:start; }
+      .countdown { width:100%; gap:7px; }
+      .time-box { min-width:0; flex:1; padding:10px 5px; }
+      .time-box b { font-size:22px; }
+      .podium { grid-template-columns:repeat(2,1fr); align-items:stretch; }
+      .podium-place.first { grid-column:1/-1; }
+      .jotform-frame { min-height:550px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="hauntings" aria-hidden="true">
+    <span class="ghost-flight">👻</span>
+    <span class="bat one">🦇</span>
+    <span class="bat two">🦇</span>
+    <span class="pumpkin left">🎃</span>
+    <span class="pumpkin right">🎃</span>
+  </div>
+  <div class="wrap">
+    <header>
+      <div class="brand"><span class="brand-mark">🎃</span><span>VERDANA <span style="color:#ff9b4b">AFTER DARK</span></span></div>
+      <span class="badge">24 OUT · HALLOWEEN</span>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="title">
+        <div class="eyebrow">A noite mais assustadoramente divertida</div>
+        <h1 id="title">Halloween do <span>Verdana</span></h1>
+        <p class="intro">Envie a foto da sua fantasia até as 21h e avalie as participantes com estrelas a partir das 19h. A fantasia com mais estrelas leva o título da noite!</p>
+        <div class="hero-bottom">
+          <div>
+            <div class="event-time">🕯️ <span><strong>Hoje, 24 de outubro</strong><br>Avaliações a partir das 19h · envio de fotos até 21h</span></div>
+            <div class="status-line" id="status" aria-live="polite">Preparando a contagem...</div>
+          </div>
+          <div class="countdown" aria-label="Contagem regressiva">
+            <div class="time-box"><b id="hours">00</b><small>horas</small></div>
+            <div class="time-box"><b id="minutes">00</b><small>minutos</small></div>
+            <div class="time-box"><b id="seconds">00</b><small>segundos</small></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="form-panel" id="submission-panel" aria-labelledby="submission-title">
+        <h2 id="submission-title">Envie sua fantasia</h2>
+        <p class="sub">O formulário fecha automaticamente às 21h. Prepare sua foto e entre na disputa!</p>
+        <div class="jotform-frame" id="jotform-frame">
+          <script type="text/javascript" src="https://form.jotform.com/jsform/262964116654059"></script>
+        </div>
+      </section>
+
+      <section class="form-panel rating-panel" id="rating-panel" hidden aria-labelledby="rating-title">
+        <h2 id="rating-title">Avalie as fantasias</h2>
+        <p class="sub">O formulário de estrelas abre às 19h. Escolha a fantasia e dê uma nota de 1 a 5.</p>
+        <div class="jotform-frame" id="rating-form-mount">
+          <div class="empty">O formulário de avaliação será conectado aqui quando você concluir a criação no Jotform.</div>
+        </div>
+      </section>
+
+      <section id="voting-panel" hidden aria-labelledby="vote-title">
+        <div class="section-head">
+          <div><h2 id="vote-title">Galeria de fantasias</h2><p class="sub">Dê de 1 a 5 estrelas para cada foto. O placar soma as estrelas recebidas.</p></div>
+          <span class="badge" id="vote-window">VOTAÇÃO ABERTA</span>
+        </div>
+        <section class="form-panel" aria-labelledby="entries-title">
+          <h2 id="entries-title">Fotos recebidas</h2>
+          <p class="sub">Registros enviados pelo formulário Jotform.</p>
+          <div class="table-frame">
+            <div class="jotform-table-embed" style="width:100%;height:600px" data-id="262964116654059" data-iframesource="www.jotform.com" data-type="interactive"></div>
+          </div>
+        </section>
+        <div class="preview-note" id="preview-note">✨ Prévia visual · exemplos ilustrativos</div>
+        <h2 style="font-size:21px;margin:22px 0 10px">🏆 Pódio · 5 mais votadas</h2>
+        <div class="podium" id="podium"></div>
+        <div class="grid" id="gallery"></div>
+      </section>
+    </main>
+    <footer>Feito para uma noite cheia de mistério no Verdana · 24 de outubro de 2026</footer>
+  </div>
+  <div class="toast" id="toast" role="status"></div>
+
+  <script>
+    // Horários no fuso de Brasília (UTC−03:00).
+    const EVENT_START = new Date("2026-10-24T19:00:00-03:00").getTime();
+    const SUBMISSION_CLOSE = new Date("2026-10-24T21:00:00-03:00").getTime();
+    const RATING_FORM_ID = ""; // Preencher com o ID do novo formulário de estrelas.
+    const ENTRIES_ENDPOINT = ""; // GET público: [{id, name, photoUrl}]
+    const RATINGS_ENDPOINT = ""; // POST seguro: {entryId, stars}
+    const ratingsKey = "verdana-halloween-ratings-v1";
+    const localRatings = (() => { try { return JSON.parse(localStorage.getItem(ratingsKey)) || {}; } catch { return {}; } })();
+    let jotformTableLoaded = false;
+    const previewEntries = [
+      { id:"preview-witch", name:"Bruxa da Lua", art:"🧙‍♀️", style:"witch" },
+      { id:"preview-vampire", name:"Vampiro da Meia-noite", art:"🧛", style:"vampire" },
+      { id:"preview-skeleton", name:"Esqueleto Dançante", art:"💀", style:"skeleton" },
+      { id:"preview-mummy", name:"Múmia Misteriosa", art:"🧟", style:"mummy" },
+      { id:"preview-pumpkin", name:"Abóbora Assombrada", art:"🎃", style:"pumpkin" }
+    ];
+    const isPreview = !Array.isArray(window.HALLOWEEN_ENTRIES);
+    let entries = isPreview ? previewEntries : window.HALLOWEEN_ENTRIES;
+
+    async function loadEntries() {
+      if (!ENTRIES_ENDPOINT) return;
+      try {
+        const response = await fetch(ENTRIES_ENDPOINT, { cache: "no-store" });
+        if (!response.ok) throw new Error("Não foi possível carregar as fotos.");
+        entries = await response.json();
+      } catch (error) { document.getElementById("gallery").innerHTML = '<div class="empty">Não foi possível carregar a galeria agora.</div>'; }
+    }
+    function updateClock() {
+      const now = Date.now();
+      const beforeVoting = now < EVENT_START;
+      const submissionsOpen = now < SUBMISSION_CLOSE;
+      const target = beforeVoting ? EVENT_START : submissionsOpen ? SUBMISSION_CLOSE : now;
+      const remain = Math.max(0, Math.floor((target - now) / 1000));
+      document.getElementById("hours").textContent = String(Math.floor(remain / 3600)).padStart(2, "0");
+      document.getElementById("minutes").textContent = String(Math.floor((remain % 3600) / 60)).padStart(2, "0");
+      document.getElementById("seconds").textContent = String(remain % 60).padStart(2, "0");
+      document.getElementById("status").textContent = beforeVoting ? "As avaliações abrem às 19h:" : submissionsOpen ? "Avaliações abertas · envie sua foto até 21h" : "Envio de fotos encerrado · avaliações abertas!";
+      document.getElementById("submission-panel").hidden = !submissionsOpen;
+      document.getElementById("rating-panel").hidden = beforeVoting;
+      document.getElementById("voting-panel").hidden = beforeVoting;
+      document.getElementById("preview-note").hidden = !isPreview;
+      if (!beforeVoting && !window.galleryLoaded) { window.galleryLoaded = true; initJotformTable(); initRatingForm(); loadEntries().then(renderGallery); }
+    }
+    function initRatingForm() {
+      const mount = document.getElementById("rating-form-mount");
+      if (!RATING_FORM_ID) return;
+      mount.replaceChildren();
+      const script = document.createElement("script");
+      script.src = "https://form.jotform.com/jsform/" + encodeURIComponent(RATING_FORM_ID);
+      mount.appendChild(script);
+    }
+    function initJotformTable() {
+      if (jotformTableLoaded) return;
+      jotformTableLoaded = true;
+      const script = document.createElement("script");
+      script.async = true;
+      script.id = "jotform-table-embed-loader";
+      script.src = "https://cdn.jotfor.ms/s/umd/latest/for-sheets-embed.js";
+      document.body.appendChild(script);
+    }
+    function score(entry) {
+      const values = Array.isArray(entry.ratings) ? entry.ratings : [];
+      const local = Number(localRatings[entry.id] || 0);
+      return { total: values.reduce((sum, value) => sum + Number(value || 0), 0) + local, count: values.length + (local ? 1 : 0) };
+    }
+    function renderGallery() {
+      const gallery = document.getElementById("gallery");
+      if (!entries.length) {
+        gallery.innerHTML = '<div class="empty"><span class="emoji">🕸️</span><strong>A galeria será liberada às 21h.</strong><br>As fotos enviadas pelo Jotform aparecerão aqui quando a fonte de submissões estiver conectada.</div>';
+        document.getElementById("podium").innerHTML = "";
+        return;
+      }
+      const ordered = [...entries].sort((a, b) => score(b).total - score(a).total);
+      gallery.innerHTML = "";
+      ordered.forEach((entry) => {
+        const result = score(entry);
+        const card = document.createElement("article"); card.className = "card photo-card";
+        let photo;
+        if (entry.photoUrl) {
+          photo = document.createElement("img"); photo.className = "photo"; photo.src = entry.photoUrl; photo.alt = entry.name || "Fantasia enviada"; photo.loading = "lazy";
+        } else {
+          photo = document.createElement("div"); photo.className = "sample-art " + (entry.style || ""); photo.textContent = entry.art || "👻"; photo.setAttribute("role", "img"); photo.setAttribute("aria-label", "Ilustração de exemplo para " + (entry.name || "fantasia"));
+        }
+        const info = document.createElement("div"); info.className = "photo-info";
+        const name = document.createElement("h3"); name.textContent = entry.name || "Fantasia";
+        const stars = document.createElement("div"); stars.className = "stars"; stars.setAttribute("role", "group"); stars.setAttribute("aria-label", "Avalie de 1 a 5 estrelas");
+        const current = Number(localRatings[entry.id] || 0);
+        for (let value = 1; value <= 5; value++) {
+          const button = document.createElement("button"); button.className = "star" + (value <= current ? " selected" : ""); button.type = "button"; button.textContent = "★"; button.setAttribute("aria-label", value + " estrelas");
+          button.addEventListener("click", () => submitRating(entry.id, value)); stars.append(button);
+        }
+        const tally = document.createElement("div"); tally.className = "score"; tally.textContent = isPreview ? "Sua nota neste navegador: " + current + "/5" : result.total + " estrelas · " + result.count + (result.count === 1 ? " avaliação" : " avaliações");
+        info.append(name, stars, tally); card.append(photo, info); gallery.append(card);
+      });
+      renderPodium(ordered);
+    }
+    async function submitRating(id, stars) {
+      if (RATINGS_ENDPOINT) {
+        try {
+          const response = await fetch(RATINGS_ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ entryId: id, stars }) });
+          if (!response.ok) throw new Error("Falha ao registrar avaliação");
+          await loadEntries();
+        } catch { showToast("Não foi possível registrar. Tente novamente."); return; }
+      } else {
+        localRatings[id] = stars;
+        localStorage.setItem(ratingsKey, JSON.stringify(localRatings));
+        showToast("Avaliação salva neste navegador. Para somar votos de todos, falta conectar o backend.");
+      }
+      renderGallery();
+    }
+    function renderPodium(ordered) {
+      const medals = ["🥇", "🥈", "🥉", "4º", "5º"];
+      const podium = document.getElementById("podium"); podium.innerHTML = "";
+      ordered.slice(0, 5).forEach((entry, index) => {
+        const place = document.createElement("div"); place.className = "podium-place" + (index === 0 ? " first" : "");
+        const medal = document.createElement("span"); medal.className = "medal"; medal.textContent = medals[index];
+        const name = document.createElement("strong"); name.textContent = entry.name || "Fantasia";
+        const total = document.createElement("small"); total.textContent = isPreview ? "nota " + Number(localRatings[entry.id] || 0) + "/5" : score(entry).total + " estrelas";
+        place.append(medal, name, total); podium.append(place);
+      });
+    }
+    function showToast(message) { const toast = document.getElementById("toast"); toast.textContent = message; toast.classList.add("show"); setTimeout(() => toast.classList.remove("show"), 3200); }
+    updateClock(); setInterval(updateClock, 1000);
+  </script>
+</body>
+</html> 
