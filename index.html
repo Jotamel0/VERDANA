@@ -108,6 +108,36 @@
     .empty .emoji { font-size:34px; display:block; margin-bottom:10px; }
     .admin { margin:28px 0 48px; padding:21px; border-radius:20px; background:#17101e; border:1px solid var(--line); }
     .admin summary { cursor:pointer; font-weight:800; }
+    .cemetery-panel { margin:22px 0 30px; padding:22px; border:1px solid #8a603c77; border-radius:22px; background:linear-gradient(145deg,#211825,#17111b); box-shadow:0 16px 42px #0003; }
+    .cemetery-panel[hidden] { display:none; }
+    .cemetery-top { display:flex; justify-content:space-between; align-items:end; gap:14px; flex-wrap:wrap; margin-bottom:16px; }
+    .cemetery-top h2 { margin-bottom:5px; }
+    .cemetery-note { color:var(--muted); font-size:13px; line-height:1.5; margin:0; }
+    .cemetery-legend { color:#f1d4ae; font-size:12px; }
+    .cemetery-progress { color:#ffe0b1; font-weight:800; font-size:13px; white-space:nowrap; }
+    .cemetery-map { position:relative; width:100%; aspect-ratio:700/360; overflow:hidden; border:1px solid #51404b; border-radius:17px; background:radial-gradient(ellipse at 50% 12%,#2d392d 0,transparent 58%),linear-gradient(180deg,#1b241e,#15151c); }
+    .cemetery-map::before { content:""; position:absolute; z-index:3; width:14px; height:14px; right:24px; top:22px; border-radius:50%; background:#ffe394; box-shadow:0 0 28px 12px #ffe39433; }
+    .cemetery-svg { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; }
+    .cemetery-route { fill:none; stroke:#090b0b; stroke-width:39; stroke-linecap:round; stroke-linejoin:round; }
+    .cemetery-route-fill { fill:none; stroke:#80684b; stroke-width:30; stroke-linecap:round; stroke-linejoin:round; }
+    .cemetery-route-dash { fill:none; stroke:#c9ad82; stroke-width:2; stroke-dasharray:3 13; stroke-linecap:round; opacity:.8; }
+    .cemetery-ghost { font-size:31px; filter:drop-shadow(0 0 8px #d5f8ff); }
+    .cemetery-decor { position:absolute; z-index:1; pointer-events:none; font-size:clamp(17px,2.5vw,27px); filter:drop-shadow(0 2px 5px #000); animation:cemeteryFloat 3.5s ease-in-out infinite; }
+    .cemetery-web { left:2.5%; top:7%; }
+    .cemetery-pumpkin { right:3%; bottom:7%; animation-delay:-1.4s; }
+    @keyframes cemeteryFloat { 50% { transform:translateY(-5px) rotate(5deg); } }
+    .cemetery-grave { position:absolute; z-index:2; display:grid; place-items:center; width:clamp(30px,4vw,40px); height:clamp(38px,5vw,48px); padding:10px 2px 2px; transform:translate(-50%,-50%); border:1px solid #aaaab1; border-bottom:4px solid #424552; border-radius:50% 50% 7px 7px; color:#fff4da; background:linear-gradient(135deg,#aaaab1,#777986 42%,#424552); box-shadow:inset 2px 2px 5px #fff3,0 5px 8px #0008; font:800 clamp(9px,1vw,12px)/1 ui-monospace,Consolas,monospace; cursor:pointer; transition:filter .16s,box-shadow .16s; }
+    .cemetery-grave:hover { z-index:4; filter:brightness(1.2); }
+    .cemetery-grave:focus-visible { outline:3px solid #ffb347; outline-offset:2px; }
+    .cemetery-number { text-shadow:0 1px 3px #000; }
+    .cemetery-skull { position:absolute; display:none; align-items:center; justify-content:center; right:-6px; bottom:-6px; width:23px; height:23px; border:1px solid #fff0cf; border-radius:50%; color:#fff2d0; background:#7d211e; font-size:15px; box-shadow:0 2px 7px #000a; }
+    .cemetery-grave.visited { border-color:#d9b28b; box-shadow:0 0 0 2px #dc604b55,0 0 17px #b8303066; }
+    .cemetery-grave.visited .cemetery-skull { display:flex; }
+    .cemetery-controls { display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; padding-top:13px; }
+    .cemetery-reset { border:0; padding:5px 0; color:#c8bdce; background:transparent; font-family:inherit; font-size:12px; font-weight:600; text-decoration:underline; cursor:pointer; }
+    .cemetery-reset:hover { color:#fff; }
+    @media(max-width:640px) { .cemetery-panel { padding:15px; } .cemetery-map { min-height:260px; aspect-ratio:unset; } .cemetery-grave { width:29px; height:37px; font-size:9px; } }
+    @media (prefers-reduced-motion: reduce) { .cemetery-decor { animation:none; } }
     .form { display:grid; grid-template-columns:1.2fr 1fr auto; gap:10px; margin-top:18px; }
     input { width:100%; color:var(--ink); background:#0f0b14; border:1px solid #ffffff24; border-radius:11px; padding:12px 13px; outline:none; }
     input:focus { border-color:var(--purple); box-shadow:0 0 0 3px #b778ff20; }
@@ -191,6 +221,23 @@
         </div>
       </section>
 
+      <section class="cemetery-panel" id="cemetery-panel" hidden aria-labelledby="cemetery-title">
+        <div class="cemetery-top">
+          <div><h2 id="cemetery-title">🪦 Caminho do cemitério</h2><p class="cemetery-note">Siga a trilha numerada e marque cada casa por onde passar. Seu check-in fica salvo somente neste navegador.</p></div>
+          <span class="cemetery-progress" id="cemetery-progress" aria-live="polite">0 / 51 casas visitadas</span>
+        </div>
+        <div class="cemetery-map" id="cemetery-map" aria-label="Mapa ilustrativo do cemitério com as casas em ordem numérica">
+          <svg class="cemetery-svg" id="cemetery-svg" viewBox="0 0 700 360" preserveAspectRatio="none" aria-hidden="true">
+            <path class="cemetery-route" d="M70 58 H630 C650 58 650 78 650 88 V120 C650 140 630 140 610 140 H70 C50 140 50 160 50 170 V202 C50 222 70 222 90 222 H630 C650 222 650 242 650 252 V282 C650 302 630 302 610 302 H70"/>
+            <path class="cemetery-route-fill" d="M70 58 H630 C650 58 650 78 650 88 V120 C650 140 630 140 610 140 H70 C50 140 50 160 50 170 V202 C50 222 70 222 90 222 H630 C650 222 650 242 650 252 V282 C650 302 630 302 610 302 H70"/>
+            <path class="cemetery-route-dash" d="M70 58 H630 C650 58 650 78 650 88 V120 C650 140 630 140 610 140 H70 C50 140 50 160 50 170 V202 C50 222 70 222 90 222 H630 C650 222 650 242 650 252 V282 C650 302 630 302 610 302 H70"/>
+            <text class="cemetery-ghost" id="cemetery-ghost" text-anchor="middle">👻</text>
+          </svg>
+          <span class="cemetery-decor cemetery-web" aria-hidden="true">🕸️</span><span class="cemetery-decor cemetery-pumpkin" aria-hidden="true">🎃</span>
+        </div>
+        <div class="cemetery-controls"><span class="cemetery-legend">👻 trilha · ☠️ casa visitada</span><button class="cemetery-reset" id="cemetery-reset" type="button">Limpar meus check-ins</button></div>
+      </section>
+
       <section class="form-panel" id="submission-panel" aria-labelledby="submission-title">
         <h2 id="submission-title">Envie sua fantasia</h2>
         <p class="sub">O formulário fecha automaticamente às 21h. Prepare sua foto e entre na disputa!</p>
@@ -216,6 +263,8 @@
           <span class="badge">RANKING FINAL</span>
         </div>
         <p class="ranking-note" id="final-note"></p>
+        <h2 style="font-size:21px;margin:22px 0 10px">🏆 Pódio final · 5 mais votadas</h2>
+        <div class="podium" id="final-podium"></div>
         <ol class="ranking-list" id="final-ranking"></ol>
       </section>
     </main>
@@ -232,6 +281,12 @@
     const ENTRIES_ENDPOINT = "https://cwcrwwybduoyyvzhtwqy.supabase.co/functions/v1/halloween-vote";
     const ratingsKey = "verdana-halloween-ratings-v1";
     const voterIdKey = "verdana-halloween-voter-v1";
+    const cemeteryStorageKey = "verdana-halloween-cemetery-checkins-v1";
+    const cemeteryHouses = ["3","07","15","17","18","21","24","29","32","36","44","46","47","50","51","54","55","56","57","62","69","71","77","78","79","83","84","87","92","93","94","109","110","114","116","119","121","123","134","140","141","142","148","151","153","173","174","177","184","186","187"];
+    const cemeteryPath = document.querySelector(".cemetery-route");
+    const cemeteryGhost = document.getElementById("cemetery-ghost");
+    const cemeteryMap = document.getElementById("cemetery-map");
+    let cemeteryVisited = (() => { try { return new Set(JSON.parse(localStorage.getItem(cemeteryStorageKey) || "[]")); } catch { return new Set(); } })();
     const localRatings = (() => { try { return JSON.parse(localStorage.getItem(ratingsKey)) || {}; } catch { return {}; } })();
     function getVoterId() {
       let id = localStorage.getItem(voterIdKey);
@@ -277,6 +332,10 @@
       document.getElementById("submission-panel").hidden = !submissionsOpen;
       document.getElementById("voting-panel").hidden = !votingOpen;
       document.getElementById("final-panel").hidden = !finalResults;
+      const cemeteryPanel = document.getElementById("cemetery-panel");
+      cemeteryPanel.hidden = beforeVoting;
+      const podiumAnchor = document.getElementById(votingOpen ? "podium" : "final-podium");
+      if (podiumAnchor && cemeteryPanel.previousElementSibling !== podiumAnchor) podiumAnchor.after(cemeteryPanel);
       document.getElementById("partial-note").textContent = "Placar parcial compartilhado e atualizado durante a votação.";
       document.getElementById("final-note").textContent = "Resultado final calculado com as avaliações recebidas até 20h59.";
       const shouldRefresh = votingOpen && now - lastRefresh >= 30000 || finalResults && !finalLoaded;
@@ -335,9 +394,9 @@
       } catch { showToast("Não foi possível registrar. Confira sua conexão e tente novamente."); return; }
       renderGallery();
     }
-    function renderPodium(ordered) {
+    function renderPodium(ordered, target = document.getElementById("podium")) {
       const medals = ["🥇", "🥈", "🥉", "4º", "5º"];
-      const podium = document.getElementById("podium"); podium.innerHTML = "";
+      const podium = target; podium.innerHTML = "";
       ordered.slice(0, 5).forEach((entry, index) => {
         const place = document.createElement("div"); place.className = "podium-place" + (index === 0 ? " first" : "");
         const medal = document.createElement("span"); medal.className = "medal"; medal.textContent = medals[index];
@@ -350,6 +409,7 @@
       const list = document.getElementById("final-ranking");
       list.innerHTML = "";
       const ranked = [...entries].sort((a, b) => score(b).total - score(a).total || String(a.name).localeCompare(String(b.name), "pt-BR"));
+      renderPodium(ranked, document.getElementById("final-podium"));
       if (!ranked.length) { list.innerHTML = '<li class="empty">Nenhuma fantasia com foto foi recebida.</li>'; return; }
       ranked.slice(0, 5).forEach((entry, index) => {
         const row = document.createElement("li"); row.className = "ranking-row" + (index === 0 ? " winner" : "");
@@ -363,6 +423,34 @@
       });
     }
     function showToast(message) { const toast = document.getElementById("toast"); toast.textContent = message; toast.classList.add("show"); setTimeout(() => toast.classList.remove("show"), 3200); }
+    function renderCemetery() {
+      const length = cemeteryPath.getTotalLength();
+      cemeteryHouses.forEach((house,index) => {
+        const distance = (index + .5) / cemeteryHouses.length * length;
+        const point = cemeteryPath.getPointAtLength(distance);
+        const before = cemeteryPath.getPointAtLength(Math.max(0,distance - 2));
+        const after = cemeteryPath.getPointAtLength(Math.min(length,distance + 2));
+        const dx = after.x - before.x, dy = after.y - before.y, magnitude = Math.hypot(dx,dy) || 1;
+        const offset = index % 2 ? 25 : -25;
+        const x = Math.max(36,Math.min(664,point.x - dy / magnitude * offset));
+        const y = Math.max(34,Math.min(326,point.y + dx / magnitude * offset));
+        const button = document.createElement("button"); button.type = "button"; button.className = "cemetery-grave";
+        button.style.left = `${x / 700 * 100}%`; button.style.top = `${y / 360 * 100}%`; button.dataset.house = house;
+        const number = document.createElement("span"); number.className = "cemetery-number"; number.textContent = house;
+        const skull = document.createElement("span"); skull.className = "cemetery-skull"; skull.textContent = "☠️"; skull.setAttribute("aria-hidden","true");
+        button.append(number,skull);
+        const updateMark = () => { const visited = cemeteryVisited.has(house); button.classList.toggle("visited",visited); button.setAttribute("aria-pressed",String(visited)); button.setAttribute("aria-label",`Casa ${house}${visited ? ", visitada" : ", não visitada"}`); };
+        updateMark(); button.addEventListener("click",() => { if (cemeteryVisited.has(house)) cemeteryVisited.delete(house); else cemeteryVisited.add(house); try { localStorage.setItem(cemeteryStorageKey,JSON.stringify([...cemeteryVisited])); } catch { showToast("O navegador não permitiu salvar este check-in."); } updateMark(); updateCemeteryProgress(); });
+        cemeteryMap.append(button);
+      });
+      updateCemeteryProgress();
+      const motion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const animate = (now) => { const d = motion ? 0 : (now * .025) % length; const p = cemeteryPath.getPointAtLength(d); cemeteryGhost.setAttribute("x",p.x); cemeteryGhost.setAttribute("y",p.y); if (!motion) requestAnimationFrame(animate); };
+      requestAnimationFrame(animate);
+      document.getElementById("cemetery-reset").addEventListener("click",() => { cemeteryVisited.clear(); try { localStorage.removeItem(cemeteryStorageKey); } catch {} cemeteryMap.querySelectorAll(".cemetery-grave").forEach(button => { button.classList.remove("visited"); button.setAttribute("aria-pressed","false"); button.setAttribute("aria-label",`Casa ${button.dataset.house}, não visitada`); }); updateCemeteryProgress(); showToast("Check-ins apagados neste navegador."); });
+    }
+    function updateCemeteryProgress() { document.getElementById("cemetery-progress").textContent = `${cemeteryVisited.size} / ${cemeteryHouses.length} casas visitadas`; }
+    renderCemetery();
     updateClock(); setInterval(updateClock, 1000);
   </script>
 </body>
