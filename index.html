@@ -127,6 +127,19 @@
     .cemetery-decor { position:absolute; z-index:1; pointer-events:none; font-size:clamp(17px,2.5vw,27px); filter:drop-shadow(0 2px 5px #000); animation:cemeteryFloat 3.5s ease-in-out infinite; }
     .cemetery-web { left:2.5%; top:7%; }
     .cemetery-pumpkin { right:3%; bottom:7%; animation-delay:-1.4s; }
+    .cemetery-witch { position:absolute; z-index:1; left:-16%; top:12%; width:clamp(78px,12vw,112px); pointer-events:none; filter:drop-shadow(0 0 8px #d4a5ff66); animation:cemeteryWitchFlight 14s ease-in-out infinite; }
+    .cemetery-witch.second { top:66%; width:clamp(66px,10vw,94px); animation-duration:17s; animation-delay:-8.5s; animation-direction:reverse; }
+    .cemetery-witch svg,.cemetery-bat svg { display:block; width:100%; overflow:visible; }
+    @keyframes cemeteryWitchFlight { 0% { left:-16%; transform:translateY(0) rotate(-7deg); } 24% { left:17%; transform:translateY(-11px) rotate(4deg); } 50% { left:48%; transform:translateY(7px) rotate(-3deg); } 76% { left:79%; transform:translateY(-9px) rotate(5deg); } 100% { left:112%; transform:translateY(0) rotate(-6deg); } }
+    .cemetery-bat { position:absolute; z-index:1; left:-8%; top:39%; width:clamp(24px,4vw,38px); pointer-events:none; filter:drop-shadow(0 0 5px #c9a5f788); animation:cemeteryBatFlight 8.5s ease-in-out infinite; }
+    .cemetery-bat.second { top:80%; width:clamp(20px,3.3vw,31px); animation-duration:11s; animation-delay:-5.5s; animation-direction:reverse; }
+    .cemetery-bat .bat-wing { transform-box:fill-box; transform-origin:center; animation:cemeteryBatFlap .32s ease-in-out infinite alternate; }
+    .cemetery-bat .bat-wing.right { animation-delay:-.32s; }
+    @keyframes cemeteryBatFlight { 0% { left:-8%; transform:translateY(0) rotate(-5deg); } 50% { left:48%; transform:translateY(-12px) rotate(5deg); } 100% { left:108%; transform:translateY(4px) rotate(-4deg); } }
+    @keyframes cemeteryBatFlap { to { transform:scaleY(.58); } }
+    .cemetery-zombie-hole { fill:#08090acc; stroke:#705b41; stroke-width:2; filter:drop-shadow(0 2px 3px #000a); }
+    .cemetery-zombie { font-size:35px; opacity:0; transform-box:fill-box; transform-origin:center; filter:drop-shadow(0 0 7px #a8e08088); animation:cemeteryZombieRise 7s ease-in-out infinite; }
+    @keyframes cemeteryZombieRise { 0%,12% { opacity:0; transform:translateY(15px) scale(.28) rotate(-12deg); } 28%,58% { opacity:1; transform:translateY(-8px) scale(1) rotate(3deg); } 72% { opacity:.9; transform:translateY(-11px) scale(1.03) rotate(-4deg); } 100% { opacity:0; transform:translateY(-3px) scale(.45) rotate(10deg); } }
     @keyframes cemeteryFloat { 50% { transform:translateY(-5px) rotate(5deg); } }
     .cemetery-grave { position:absolute; z-index:2; display:grid; place-items:center; width:clamp(30px,4vw,40px); height:clamp(38px,5vw,48px); padding:10px 2px 2px; transform:translate(-50%,-50%); border:1px solid #aaaab1; border-bottom:4px solid #424552; border-radius:50% 50% 7px 7px; color:#fff4da; background:linear-gradient(135deg,#aaaab1,#777986 42%,#424552); box-shadow:inset 2px 2px 5px #fff3,0 5px 8px #0008; font:800 clamp(9px,1vw,12px)/1 ui-monospace,Consolas,monospace; cursor:pointer; transition:filter .16s,box-shadow .16s; }
     .cemetery-grave:hover { z-index:4; filter:brightness(1.2); }
@@ -139,7 +152,7 @@
     .cemetery-reset { border:0; padding:5px 0; color:#c8bdce; background:transparent; font-family:inherit; font-size:12px; font-weight:600; text-decoration:underline; cursor:pointer; }
     .cemetery-reset:hover { color:#fff; }
     @media(max-width:640px) { .cemetery-panel { padding:15px; } .cemetery-map { min-height:260px; aspect-ratio:unset; } .cemetery-grave { width:29px; height:37px; font-size:9px; } }
-    @media (prefers-reduced-motion: reduce) { .cemetery-decor { animation:none; } }
+    @media (prefers-reduced-motion: reduce) { .cemetery-decor,.cemetery-witch,.cemetery-bat,.cemetery-bat .bat-wing,.cemetery-zombie { animation:none!important; } .cemetery-witch { left:12%; } .cemetery-witch.second { left:70%; } .cemetery-bat { left:39%; } .cemetery-bat.second { left:78%; } .cemetery-zombie { opacity:1; transform:none; } }
     .form { display:grid; grid-template-columns:1.2fr 1fr auto; gap:10px; margin-top:18px; }
     input { width:100%; color:var(--ink); background:#0f0b14; border:1px solid #ffffff24; border-radius:11px; padding:12px 13px; outline:none; }
     input:focus { border-color:var(--purple); box-shadow:0 0 0 3px #b778ff20; }
@@ -236,6 +249,10 @@
             <text class="cemetery-ghost" id="cemetery-ghost" text-anchor="middle">👻</text>
           </svg>
           <span class="cemetery-decor cemetery-web" aria-hidden="true">🕸️</span><span class="cemetery-decor cemetery-pumpkin" aria-hidden="true">🎃</span>
+          <span class="cemetery-witch" aria-hidden="true"><svg viewBox="0 0 120 72"><path d="M13 55 108 21" fill="none" stroke="#70452d" stroke-width="4" stroke-linecap="round"/><path d="M15 52Q4 51 2 64q9-5 18 2 5-9-5-14Z" fill="#c99643" stroke="#f1c56d" stroke-width="2"/><path d="M42 37Q51 28 66 34l17 10-14 10-29-7Z" fill="#65428b" stroke="#f2c972" stroke-width="2"/><path d="m48 43-8 8m23-11 10 8" fill="none" stroke="#ffdca1" stroke-width="3" stroke-linecap="round"/><path d="M45 38q-5-8-1-16 8-12 20-3l7 13-9 10-15-1Z" fill="#28182d"/><circle cx="62" cy="27" r="8" fill="#f3c799"/><path d="M53 25 60 7q4-5 7 1l14 13-18 1Z" fill="#412354" stroke="#ffd36e" stroke-width="2"/><path d="M52 22q14-7 33 0-15 5-33 3Z" fill="#412354" stroke="#ffd36e" stroke-width="2"/><path d="M61 18 64 13l3 5Z" fill="#fff0a8"/><path d="M44 40q-8 5-11 11m25-4q6 6 12 7" fill="none" stroke="#f3c799" stroke-width="3" stroke-linecap="round"/><path d="M31 29l2-4 2 4 4 2-4 1-2 4-2-4-4-1Z" fill="#ffe696"/></svg></span>
+          <span class="cemetery-witch second" aria-hidden="true"><svg viewBox="0 0 120 72"><path d="M13 55 108 21" fill="none" stroke="#70452d" stroke-width="4" stroke-linecap="round"/><path d="M15 52Q4 51 2 64q9-5 18 2 5-9-5-14Z" fill="#c99643" stroke="#f1c56d" stroke-width="2"/><path d="M42 37Q51 28 66 34l17 10-14 10-29-7Z" fill="#536d45" stroke="#f2c972" stroke-width="2"/><path d="m48 43-8 8m23-11 10 8" fill="none" stroke="#ffdca1" stroke-width="3" stroke-linecap="round"/><path d="M45 38q-5-8-1-16 8-12 20-3l7 13-9 10-15-1Z" fill="#28182d"/><circle cx="62" cy="27" r="8" fill="#f3c799"/><path d="M53 25 60 7q4-5 7 1l14 13-18 1Z" fill="#38452d" stroke="#ffd36e" stroke-width="2"/><path d="M52 22q14-7 33 0-15 5-33 3Z" fill="#38452d" stroke="#ffd36e" stroke-width="2"/><path d="M61 18 64 13l3 5Z" fill="#fff0a8"/><path d="M44 40q-8 5-11 11m25-4q6 6 12 7" fill="none" stroke="#f3c799" stroke-width="3" stroke-linecap="round"/><path d="M31 29l2-4 2 4 4 2-4 1-2 4-2-4-4-1Z" fill="#ffe696"/></svg></span>
+          <span class="cemetery-bat" aria-hidden="true"><svg viewBox="0 0 48 34"><path class="bat-wing left" d="M23 14Q13 3 2 5q5 7 0 14 10-5 20 7Z" fill="#33243e" stroke="#c59bdd" stroke-width="1.4"/><path class="bat-wing right" d="M25 14Q35 3 46 5q-5 7 0 14-10-5-20 7Z" fill="#33243e" stroke="#c59bdd" stroke-width="1.4"/><path d="m18 13 2-7 5 5 5-5 2 7q-1 13-7 16-6-3-7-16Z" fill="#47304f" stroke="#d5b4e7" stroke-width="1.3"/><circle cx="22" cy="17" r="1.2" fill="#ffcf68"/><circle cx="27" cy="17" r="1.2" fill="#ffcf68"/></svg></span>
+          <span class="cemetery-bat second" aria-hidden="true"><svg viewBox="0 0 48 34"><path class="bat-wing left" d="M23 14Q13 3 2 5q5 7 0 14 10-5 20 7Z" fill="#33243e" stroke="#c59bdd" stroke-width="1.4"/><path class="bat-wing right" d="M25 14Q35 3 46 5q-5 7 0 14-10-5-20 7Z" fill="#33243e" stroke="#c59bdd" stroke-width="1.4"/><path d="m18 13 2-7 5 5 5-5 2 7q-1 13-7 16-6-3-7-16Z" fill="#47304f" stroke="#d5b4e7" stroke-width="1.3"/><circle cx="22" cy="17" r="1.2" fill="#ffcf68"/><circle cx="27" cy="17" r="1.2" fill="#ffcf68"/></svg></span>
         </div>
         <div class="cemetery-controls"><span class="cemetery-legend">👻 trilha · ☠️ casa visitada</span><button class="cemetery-reset" id="cemetery-reset" type="button">Limpar meus check-ins</button></div>
       </section>
@@ -437,6 +454,15 @@
     function showToast(message) { const toast = document.getElementById("toast"); toast.textContent = message; toast.classList.add("show"); setTimeout(() => toast.classList.remove("show"), 3200); }
     function renderCemetery() {
       const length = cemeteryPath.getTotalLength();
+      const cemeterySvg = document.getElementById("cemetery-svg");
+      [.14,.38,.62,.86].forEach((ratio,index) => {
+        const point = cemeteryPath.getPointAtLength(length * ratio);
+        const hole = document.createElementNS("http://www.w3.org/2000/svg","ellipse");
+        hole.classList.add("cemetery-zombie-hole"); hole.setAttribute("cx",point.x); hole.setAttribute("cy",point.y + 3); hole.setAttribute("rx","17"); hole.setAttribute("ry","7");
+        const zombie = document.createElementNS("http://www.w3.org/2000/svg","text");
+        zombie.classList.add("cemetery-zombie"); zombie.setAttribute("text-anchor","middle"); zombie.setAttribute("aria-hidden","true"); zombie.setAttribute("x",point.x); zombie.setAttribute("y",point.y + 10); zombie.style.animationDelay = `${-index * 1.75}s`; zombie.textContent = index % 2 ? "🧟‍♀️" : "🧟";
+        cemeterySvg.append(hole,zombie);
+      });
       cemeteryHouses.forEach((house,index) => {
         const distance = (index + .5) / cemeteryHouses.length * length;
         const point = cemeteryPath.getPointAtLength(distance);
