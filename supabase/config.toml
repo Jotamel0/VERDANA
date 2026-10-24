@@ -1,0 +1,2 @@
+[functions.halloween-vote]
+verify_jwt = false
