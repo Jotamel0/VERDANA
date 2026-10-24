@@ -209,7 +209,7 @@
       <section class="hero" aria-labelledby="title">
         <div class="eyebrow">A noite mais assustadoramente divertida</div>
         <h1 id="title">Halloween do <span>Verdana</span></h1>
-        <p class="intro">Envie sua fantasia antes do evento. Às 19h, o mapa e a votação ficam disponíveis, com ranking parcial. Às 21h, o mapa permanece com o resultado final.</p>
+        <p class="intro">Envie sua fantasia até 20h59. Às 19h, o mapa e a votação ficam disponíveis, com ranking parcial. Às 21h, o mapa permanece com o resultado final.</p>
         <div class="hero-bottom">
           <div>
             <div class="event-time">🕯️ <span><strong>Hoje, 24 de outubro</strong><br>Votação 19h–20h59 · resultado final às 21h</span></div>
@@ -242,7 +242,7 @@
 
       <section class="form-panel" id="submission-panel" aria-labelledby="submission-title">
         <h2 id="submission-title">Envie sua fantasia</h2>
-        <p class="sub">O formulário fecha automaticamente às 21h. Prepare sua foto e entre na disputa!</p>
+        <p class="sub">Envie sua foto até 20h59, mesmo depois que a votação começar. Prepare sua fantasia e entre na disputa!</p>
         <div class="jotform-frame" id="jotform-frame">
           <script type="text/javascript" src="https://form.jotform.com/jsform/262964116654059"></script>
         </div>
@@ -331,7 +331,7 @@
       document.getElementById("minutes").textContent = String(Math.floor((remain % 3600) / 60)).padStart(2, "0");
       document.getElementById("seconds").textContent = String(remain % 60).padStart(2, "0");
       document.getElementById("status").textContent = beforeVoting ? "A votação abre às 19h:" : votingOpen ? "Votação aberta · encerra às 20h59" : "Votação encerrada · ranking final";
-      document.getElementById("submission-panel").hidden = !submissionsOpen || !beforeVoting;
+      document.getElementById("submission-panel").hidden = !submissionsOpen;
       document.getElementById("voting-panel").hidden = !votingOpen;
       document.getElementById("final-panel").hidden = !finalResults;
       document.querySelector(".countdown").hidden = !beforeVoting;
