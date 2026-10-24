@@ -48,6 +48,7 @@
     .event-time { display:flex; gap:12px; align-items:center; color:#e8d9e9; font-size:14px; }
     .event-time strong { color:var(--ink); }
     .countdown { display:flex; gap:10px; }
+    .countdown[hidden] { display:none; }
     .time-box { min-width:76px; text-align:center; border:1px solid var(--line); background:#100b1680; border-radius:15px; padding:11px 12px 9px; }
     .time-box b { display:block; font-size:26px; line-height:1.1; letter-spacing:-.04em; }
     .time-box small { color:var(--muted); font-size:10px; text-transform:uppercase; letter-spacing:.12em; }
@@ -208,7 +209,7 @@
       <section class="hero" aria-labelledby="title">
         <div class="eyebrow">A noite mais assustadoramente divertida</div>
         <h1 id="title">Halloween do <span>Verdana</span></h1>
-        <p class="intro">Envie sua foto até as 21h. Vote nas fantasias com estrelas das 19h às 20h59. Às 21h, a página mostra somente o ranking final.</p>
+        <p class="intro">Envie sua fantasia antes do evento. Às 19h, o mapa e a votação ficam disponíveis, com ranking parcial. Às 21h, o mapa permanece com o resultado final.</p>
         <div class="hero-bottom">
           <div>
             <div class="event-time">🕯️ <span><strong>Hoje, 24 de outubro</strong><br>Votação 19h–20h59 · resultado final às 21h</span></div>
@@ -330,13 +331,19 @@
       document.getElementById("minutes").textContent = String(Math.floor((remain % 3600) / 60)).padStart(2, "0");
       document.getElementById("seconds").textContent = String(remain % 60).padStart(2, "0");
       document.getElementById("status").textContent = beforeVoting ? "A votação abre às 19h:" : votingOpen ? "Votação aberta · encerra às 20h59" : "Votação encerrada · ranking final";
-      document.getElementById("submission-panel").hidden = !submissionsOpen;
+      document.getElementById("submission-panel").hidden = !submissionsOpen || !beforeVoting;
       document.getElementById("voting-panel").hidden = !votingOpen;
       document.getElementById("final-panel").hidden = !finalResults;
+      document.querySelector(".countdown").hidden = !beforeVoting;
       const cemeteryPanel = document.getElementById("cemetery-panel");
-      cemeteryPanel.hidden = beforeVoting;
-      const podiumAnchor = document.getElementById(votingOpen ? "podium" : "final-podium");
-      if (podiumAnchor && cemeteryPanel.previousElementSibling !== podiumAnchor) podiumAnchor.after(cemeteryPanel);
+      cemeteryPanel.hidden = false;
+      if (beforeVoting) {
+        const hero = document.querySelector(".hero");
+        if (cemeteryPanel.previousElementSibling !== hero) hero.after(cemeteryPanel);
+      } else {
+        const podiumAnchor = document.getElementById(votingOpen ? "podium" : "final-podium");
+        if (podiumAnchor && cemeteryPanel.previousElementSibling !== podiumAnchor) podiumAnchor.after(cemeteryPanel);
+      }
       document.getElementById("partial-note").textContent = "Placar parcial compartilhado e atualizado durante a votação.";
       document.getElementById("final-note").textContent = "Resultado final calculado com as avaliações recebidas até 20h59.";
       const shouldRefresh = votingOpen && now - lastRefresh >= 30000 || finalResults && !finalLoaded;
