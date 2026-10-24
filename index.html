@@ -306,13 +306,13 @@
     let finalLoaded = false;
 
     async function loadEntries() {
-      if (Array.isArray(window.HALLOWEEN_ENTRIES)) { entries = window.HALLOWEEN_ENTRIES; return true; }
-      if (!ENTRIES_ENDPOINT) { entries = previewEntries; isPreview = true; return true; }
+      if (Array.isArray(window.HALLOWEEN_ENTRIES)) { entries = withoutTestEntries(window.HALLOWEEN_ENTRIES); return true; }
+      if (!ENTRIES_ENDPOINT) { entries = withoutTestEntries(previewEntries); isPreview = true; return true; }
       try {
         const response = await fetch(ENTRIES_ENDPOINT + "?t=" + Date.now(), { cache: "no-store" });
         if (!response.ok) throw new Error("Não foi possível carregar as fotos.");
         const payload = await response.json();
-        entries = Array.isArray(payload) ? payload : Array.isArray(payload.entries) ? payload.entries : [];
+        entries = withoutTestEntries(Array.isArray(payload) ? payload : Array.isArray(payload.entries) ? payload.entries : []);
         isPreview = false;
         return true;
       } catch (error) { entries = []; document.getElementById("gallery").innerHTML = '<div class="empty">Não foi possível carregar as fotos agora.</div>'; return false; }
@@ -348,6 +348,9 @@
     }
     function score(entry) {
       return { total: Number(entry.totalStars || 0), count: Number(entry.ratingCount || 0) };
+    }
+    function withoutTestEntries(list) {
+      return list.filter(entry => !/\b(?:DEMO|TESTE)\b/i.test(String(entry.name || "")));
     }
     function renderGallery() {
       const gallery = document.getElementById("gallery");
